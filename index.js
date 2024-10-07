@@ -1,17 +1,22 @@
 const express = require('express');
+const cors = require('cors');
+
+
 const app = express();
 const PORT = 3000;
 
-// Handle GET request to the root URL
+
+app.use(cors());
+
+
 app.get('/', (req, res) => {
     res.send('Welcome to our API for CSPI101: System Integration and Architecture 1-MIDTERM EXAM, just type this to view the Employees -localhost:3000/employees- SALAMAT :) By: Domogma and Pabellosa.');
 });
 
 
-// Middleware to parse JSON data
 app.use(express.json());
 
-// Sample data with 7 employees
+
 let employees = [
     {
         id: 35524,
@@ -106,18 +111,18 @@ let employees = [
     }
 ];
 
-// Helper function to generate the next sequential ID
+
 const getNextId = () => {
     const ids = employees.map(emp => emp.id);
     return Math.max(...ids) + 1;
 };
 
-// GET all employees
+
 app.get('/employees', (req, res) => {
     res.json(employees);
 });
 
-// GET single employee by ID
+
 app.get('/employees/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const employee = employees.find(e => e.id === id);
@@ -128,7 +133,7 @@ app.get('/employees/:id', (req, res) => {
     }
 });
 
-// POST create a new employee
+
 app.post('/employees', (req, res) => {
     const newEmployee = {
         id: getNextId(),
@@ -138,7 +143,7 @@ app.post('/employees', (req, res) => {
     res.status(201).json(newEmployee);
 });
 
-// PUT update an employee (full update)
+
 app.put('/employees/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const index = employees.findIndex(e => e.id === id);
@@ -150,7 +155,7 @@ app.put('/employees/:id', (req, res) => {
     }
 });
 
-// PATCH update an employee (partial update)
+
 app.patch('/employees/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const index = employees.findIndex(e => e.id === id);
@@ -162,12 +167,13 @@ app.patch('/employees/:id', (req, res) => {
     }
 });
 
-// DELETE an employee
+
 app.delete('/employees/:id', (req, res) => {
     const id = parseInt(req.params.id);
     employees = employees.filter(e => e.id !== id);
     res.status(204).send();
 });
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
